@@ -1,0 +1,48 @@
+-- 3. a)
+/*
+Lista de pacientes que nunca tiveram uma prescrição;
+*/
+
+σ total_presc = 0 (γ paciente.numUtente, paciente.nome, paciente.endereco, paciente.dataNasc ; count(prescricao.numPresc)-> total_presc (prescricao ⟖ paciente))
+
+-- 3. b)
+/*
+Número de prescrições por especialidade médica;
+*/
+
+num_prescs = γ medico.especialidade; count(prescricao.numPresc)-> num_presc (medico ⟕ medico.numSNS = prescricao.numMedico prescricao)
+num_prescs
+
+-- 3. c)
+/*
+Número de prescrições processadas por farmácia;
+*/
+
+π farmacia.nome, total (γ farmacia.nome; COUNT(*)->total (farmacia ⟕ farmacia.nome = prescricao.farmacia prescricao))
+
+-- 3. d)
+/*
+Para a farmacêutica com registo número 906, lista dos seus fármacos nunca
+prescritos;
+*/
+
+cond = σ presc_farmaco.numPresc = null (farmaco ⟕ farmaco.nome = presc_farmaco.nomeFarmaco presc_farmaco)
+π farmaco.numRegFarm, farmaco.nome, farmaco.formula (cond)
+
+-- 3. e)
+/*
+Para cada farmácia, o número de fármacos de cada farmacêutica vendidos;
+*/
+
+farmacia_farmaceutica = γ farmacia_presc.nome, farmaceutica.nome; count(farmaceutica.numReg)->total (farmaceutica ⟕ farmaceutica.numReg = presc_farmaco.numRegFarm (presc_farmaco ⨝ presc_farmaco.numPresc = farmacia_presc.numPresc ρ farmacia_presc (farmacia ⟕ farmacia.nome = prescricao.farmacia prescricao)))
+σ farmacia_presc.nome != null π farmacia_presc.nome, farmaceutica.nome, total (farmacia_farmaceutica)
+
+-- 3. f)
+/*
+Pacientes que tiveram prescrições de médicos diferentes;
+*/
+
+minMed = ρ minMed σ nMedMin > 1 γ numUtente; min(numMedico) -> nMedMin (prescricao)
+maxMed = ρ maxMed σ nMedMax > 1 γ numUtente; max(numMedico) -> nMedMax (prescricao)
+pacMed = ρ pacMed σ numUtente = numUtente ∧ minMed.nMedMin != maxMed.nMedMax (minMed ⨝ maxMed)
+ρ pacientes π numUtente,nome,dataNasc,endereco (paciente ⨝ pacMed)

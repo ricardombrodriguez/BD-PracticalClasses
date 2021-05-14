@@ -1,0 +1,74 @@
+	CREATE SCHEMA RENTACAR;
+
+	GO
+
+	CREATE TABLE RENTACAR.Cliente (
+	    nif BIGINT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	    nome VARCHAR(255) NOT NULL,
+	    numCarta BIGINT NOT NULL UNIQUE,
+	    endereco VARCHAR(255) NOT NULL
+	);
+
+	GO
+	
+	CREATE TABLE RENTACAR.Balcao (
+		numero INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	    nome VARCHAR(255) NOT NULL,
+	    endereco VARCHAR(255) NOT NULL
+	);
+
+	GO
+
+	CREATE TABLE RENTACAR.TipoVeiculo (
+		codigo INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	    arcondicionado BIT NOT NULL,
+		designacao VARCHAR(255) NOT NULL
+	);
+
+	GO
+
+	CREATE TABLE RENTACAR.Veiculo (
+		matricula VARCHAR(255) NOT NULL PRIMARY KEY,
+	    ano INT NOT NULL,
+	    marca VARCHAR(255) NOT NULL,
+		tipoVeic INT NOT NULL FOREIGN KEY REFERENCES RENTACAR.TipoVeiculo(codigo)
+	);
+
+	GO
+
+	CREATE TABLE RENTACAR.Aluguer (
+		numero INT NOT NULL PRIMARY KEY,
+	    cliente BIGINT NOT NULL FOREIGN KEY REFERENCES RENTACAR.Cliente(nif),
+		balcao INT NOT NULL FOREIGN KEY REFERENCES RENTACAR.Balcao(numero),
+		veiculo INT NOT NULL FOREIGN KEY REFERENCES RENTACAR.TipoVeiculo(codigo),
+		dataAluguer datetime NOT NULL,
+	    duracao INT NOT NULL
+	);
+
+	GO
+
+	CREATE TABLE RENTACAR.Ligeiro (
+		codigo INT NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES RENTACAR.TipoVeiculo(codigo),
+	    numLugares SMALLINT NOT NULL,
+		portas SMALLINT NOT NULL,
+		combustivel SMALLINT NOT NULL
+	);
+
+	GO
+
+	CREATE TABLE RENTACAR.Pesado (
+		codigo INT NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES RENTACAR.TipoVeiculo(codigo),
+	    peso DECIMAL(5,3) NOT NULL,
+		passageiros SMALLINT NOT NULL
+	);
+
+	GO
+
+	CREATE TABLE RENTACAR.VeiculosSimilares (
+		codigoCarro1 INT NOT NULL FOREIGN KEY REFERENCES RENTACAR.TipoVeiculo(codigo),
+		codigoCarro2 INT NOT NULL FOREIGN KEY REFERENCES RENTACAR.TipoVeiculo(codigo)
+	);
+
+	GO
+
+

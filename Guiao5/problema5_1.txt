@@ -1,0 +1,97 @@
+-- 1. a)
+/*
+Obtenha uma lista contendo os projetos e funcionários (ssn e nome completo) que
+lá trabalham;
+*/
+
+emp = σ Ssn = works_on.Essn (works_on ⨝ employee)
+proj = σ project.Pnumber = works_on.Pno (project ⨝ works_on)
+π Fname, Lname, Ssn, Pname (emp ⨝ proj)
+
+-- 1. b)
+/*
+Obtenha o nome de todos os funcionários supervisionados por ‘Carlos D Gomes’;
+*/
+
+sname = σ Fname = 'Carlos' ∧ Minit = 'D' ∧ Lname = 'Gomes' (employee)
+svision = σ super.Ssn=employee.Super_ssn (employee ⨯ ρ super (π Ssn (sname)))
+π Fname, Minit, Lname (svision)
+
+
+-- 1. c)
+/*
+Para cada projeto, listar o seu nome e o número de horas (por semana) gastos nesse
+projeto por todos os funcionários;
+*/
+
+emp = σ Ssn = works_on.Essn (works_on ⨝ employee)
+proj = σ project.Pnumber = works_on.Pno (project ⨝ works_on)
+γ Pno, Pname; sum(Hours)->total (emp ⨝ proj)
+
+
+-- 1. d)
+/*
+Obter o nome de todos os funcionários do departamento 3 que trabalham mais de
+20 horas por semana no projeto ‘Aveiro Digital’;
+*/
+
+dep = σ Dno = 3 (employee)
+proj = σ Pname = 'Aveiro Digital' (project)
+emp = σ Ssn = works_on.Essn ∧ works_on.Hours > 20 (works_on ⨝ dep)
+π Fname (emp)
+
+
+-- 1. e)
+/*
+Nome dos funcionários que não trabalham para projetos;
+*/
+
+emp = σ Ssn = works_on.Essn (works_on ⨝ employee)
+nemp = σ emp_proj.total = null (employee ⟕ ρ emp_proj (γ Ssn, Fname, Lname ; count(Fname)->total (emp)))
+π Fname, Minit, Lname (nemp)
+
+
+-- 1. f)
+/*
+Para cada departamento, listar o seu nome e o salário médio dos seus funcionários
+do sexo feminino;
+*/
+
+fem = σ Sex = 'F' (employee)
+dep = σ Dnumber = emp_sal.Dno (department ⨯ ρ emp_sal (γ Dno ; avg(Salary)->med (fem)))
+π Dname, med (dep ⟖ department)
+
+
+-- 1. g)
+/*
+Obter uma lista de todos os funcionários com mais do que dois dependentes;
+*/
+
+n_dep = σ n_dep > 2 ∧ employee.Ssn = n_dep.Essn (employee ⨯ ρ n_dep (γ Essn ; Count(Essn)->n_dep (dependent)))
+π Essn,Fname, Minit, Lname, n_dependentes←n_dep (n_dep)
+
+
+-- 1. h)
+/*
+Obtenha uma lista de todos os funcionários gestores de departamento que não têm
+dependentes;
+*/
+
+n_dep = σ (employee.Super_ssn = null ∧ employee.Ssn = n_dep.Essn) (employee ⟕ ρ n_dep (γ Essn ; Count(Essn)->total (dependent)))
+final = σ employee.Super_ssn = null ∧ n_dep.Essn = null (n_dep ⟖ employee)
+π Ssn, Fname, Minit, Lname, Super_ssn (final)
+
+
+-- 1. i)
+/*
+Obter os nomes e endereços de todos os funcionários que trabalham em, pelo menos,
+um projeto localizado em Aveiro mas o seu departamento não tem nenhuma
+localização em Aveiro.
+*/
+
+dep_not_aveiro = σ dept_location.Dlocation ≠ 'Aveiro' (department ⟕ dept_location)
+proj_in_aveiro = σ project.Plocation = 'Aveiro' ∧ project.Pnumber = works_on.Pno (project ⨝ works_on)
+emp_dep = σ department.Dnumber = employee.Dno (employee ⨝ dep_not_aveiro)
+emp_proj = σ works_on.Essn = employee.Ssn (employee ⨝ proj_in_aveiro)
+final = γ Fname, Minit, Lname, Address; count(Ssn)->total (emp_proj ⨝ emp_dep)
+π Fname, Minit, Lname, Address (final)

@@ -1,0 +1,75 @@
+Problema 7.1
+
+a) Se considerarmos que todos os atributos são atómicos, então
+a relação está na 1FN.
+
+b) Para chegarmos até à 3FN, temos de primeiro passar a relação
+para a 2FN:
+
+Da relação Livro (Titulo_Livro, Nome_Autor, Afiliacao_Autor, Tipo_Livro, Preco, NoPaginas,
+Editor, Endereco_Editor, Ano_Publicacao)
+
+Passamos às seguintes relações:
+
+Livro (Titulo_Livro, Nome_Autor, Tipo_Livro, Preco, NoPaginas, Editor, Endereco_Editor, Ano_Publicacao)
+Autor (Nome_Autor, Afiliacao_Autor)
+
+Para a 3FN temos de decompor ainda mais as relações
+para que não existam dependências entre atributos não chave:
+
+Livro (Titulo_Livro, Nome_Autor,  Tipo_Livro, NoPaginas, Editor, Ano_Publicacao)
+Autor (Nome_Autor, Afiliacao_Autor)
+Editor (Editor, Endereco_Editor)
+Preco (Tipo_Livro, NoPaginas, Preco)
+
+Problema 7.2
+
+a) A chave de R é a junção dos atributos A e B.
+
+b) De R = {A, B, C, D, E, F, G, H, I, J} passamos a:
+
+R1 = {A, B, C}
+R2 = {A, D, E, I, J}
+R3 = {B, F, G, H}
+
+c)
+R1 = {A, B, C}
+R2 = {A, D, E}
+R2_1 = {D, I, J}
+R3 = {B, F}
+R3_1 = {F, G, H}
+
+
+Problema 7.3
+
+a) A + B
+
+b) 
+2FN -> R = {A, B, C, D, E}
+
+3FN -> 
+    R1 = {A, B, C, D}
+    R2 = {D, E}
+
+c)
+BCNF -> 
+    R1 = {B, C, D}
+    R2 = {D, E}
+    R3 = {C, A}
+
+Problema 7.4
+
+a) A + B 
+
+b)
+2FN ->
+    R1 = {A, B, E}
+    R2 = {A, C, D}
+
+c)
+3FN ->
+    R1 = {A, B, E}
+    R2 = {A, C}
+    R2_1 = {C, D}
+
+d) Já está na forma BCNF.  
