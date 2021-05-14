@@ -5,4 +5,4 @@ This repository contains all of my resolutions to the *Databases* practical guid
 ## Authors
 
 - [Ricardo Rodriguez](https://github.com/ricardombrodriguez)
-- [Gonçalo Leal]
+- Gonçalo Leal
