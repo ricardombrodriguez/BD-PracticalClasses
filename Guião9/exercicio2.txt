@@ -1,0 +1,40 @@
+a) ALTER TABLE mytemp ADD CONSTRAINT PK_RID PRIMARY KEY CLUSTERED (rid);
+
+b) 
+-- Resultados:
+-- Fragmentação dos indices: 99,27 %
+-- Ocupação das páginas: 69,44 %
+-- Milliseconds used: 65606
+
+c)
+
+ALTER TABLE mytemp ADD CONSTRAINT PK_RID PRIMARY KEY CLUSTERED (rid) WITH (FILLFACTOR = 65);
+-- Resultados:
+-- Fragmentação dos indices: 99,27 %
+-- Ocupação das páginas: 69,44 %
+-- Milliseconds used: 65606
+
+ALTER TABLE mytemp ADD CONSTRAINT PK_RID PRIMARY KEY CLUSTERED (rid) WITH (FILLFACTOR = 80);
+-- Resultados:
+-- Fragmentação dos indices: 98,93 %
+-- Ocupação das páginas: 68,12 %
+-- Milliseconds used: 132743
+
+ALTER TABLE mytemp ADD CONSTRAINT PK_RID PRIMARY KEY CLUSTERED (rid) WITH (FILLFACTOR = 90);
+-- Resultados:
+-- Fragmentação dos indices: 99.01%
+-- Ocupação das páginas: 69,88%
+-- Milliseconds used: 85021
+
+d)
+
+-- Resultados:
+-- Milliseconds used: 125366
+
+e)
+
+-- Resultados:
+
+-- Sem índices -> tempo: 77607
+-- Com índices -> tempo: 107265
+
